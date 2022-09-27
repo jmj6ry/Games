@@ -89,19 +89,9 @@ class ReflexAgent(Agent):
             if (dist < minFoodDist):
                 minFoodDist = dist
 
-        eatGhost = 0
-        scaredGhost = sys.maxsize
-        for ghost in newGhostStates:
-             if ghost.scaredTimer != 0:
-                dist = manhattanDistance(newPos, ghost.getPosition())
-                if dist < scaredGhost:
-                    scaredGhost = dist
-                if newPos == ghost.getPosition():
-                    eatGhost = 1000
-                if scaredGhost < minFoodDist:
-                    eatGhost = 1000
+    
 
-        return successorGameState.getScore() + 9/minFoodDist + (minGhostDist * 3) + eatGhost
+        return successorGameState.getScore() + 20/(minFoodDist+1) - (2/(minGhostDist+1) * 1.5)
 
 def scoreEvaluationFunction(currentGameState):
     """

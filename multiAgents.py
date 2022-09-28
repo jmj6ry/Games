@@ -204,7 +204,52 @@ class AlphaBetaAgent(MultiAgentSearchAgent):
         Returns the minimax action using self.depth and self.evaluationFunction
         """
         "*** YOUR CODE HERE ***"
-        util.raiseNotDefined()
+        def minimax(gameState, depth, alpha, beta, player):
+            actions = gameState.getLegalActions(player)
+            #check if depth is 0 or at a end state
+                #return static evaluation of position
+            if gameState.isWin() or gameState.isLose() or depth == 0:
+                return [self.evaluationFunction(gameState)]
+
+            #if all players played, decrement depth and play again
+            if player == gameState.getNumAgents() - 1:
+                depth -= 1
+                child = 0
+            else:
+                #next player plays
+                child = player + 1
+
+            #maximizing player
+            if player == 0:
+                maxEval = -sys.maxsize-1
+                bestMove = None
+                for action in actions:
+                    newState = gameState.generateSuccessor(player, action)
+                    eval = minimax(newState, depth, alpha, beta, child)[0]
+                    if eval > maxEval:
+                        maxEval = eval
+                        bestMove = action
+                    alpha = max(maxEval, eval)
+                    if beta <= alpha:
+                        break
+                return maxEval, bestMove
+            #minimizing player
+            else:
+                minEval = sys.maxsize
+                bestMove = None
+                for action in actions:
+                    newState = gameState.generateSuccessor(player, action)
+                    eval = minimax(newState, depth, alpha, beta, child)[0]
+                    if eval < minEval:
+                        minEval = eval
+                        bestMove = action
+                    beta = min(minEval, eval)
+                    if beta <= alpha:
+                        break
+                return minEval, bestMove
+        
+        eval, move = minimax(gameState, self.depth, -sys.maxsize-1, sys.maxsize, self.index)
+        return move
 
 class ExpectimaxAgent(MultiAgentSearchAgent):
     """

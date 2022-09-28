@@ -224,29 +224,29 @@ class AlphaBetaAgent(MultiAgentSearchAgent):
                 maxEval = -sys.maxsize-1
                 bestMove = None
                 for action in actions:
-                    if beta < alpha:
+                    if beta < maxEval:
                         break
                     newState = gameState.generateSuccessor(player, action)
                     eval = minimax(newState, depth, alpha, beta, child)[0]
                     if eval > maxEval:
                         maxEval = eval
                         bestMove = action
-                        alpha = maxEval
-                return alpha, bestMove
+                    alpha = max(maxEval, alpha)
+                return maxEval, bestMove
             #minimizing player
             else:
                 minEval = sys.maxsize
                 bestMove = None
                 for action in actions:
-                    if beta < alpha:
+                    if minEval < alpha:
                         break
                     newState = gameState.generateSuccessor(player, action)
                     eval = minimax(newState, depth, alpha, beta, child)[0]
                     if eval < minEval:
                         minEval = eval
                         bestMove = action
-                        beta = minEval
-                return beta, bestMove
+                    beta = min(minEval, beta)
+                return minEval, bestMove
         
         eval, move = minimax(gameState, self.depth, -sys.maxsize-1, sys.maxsize, self.index)
         return move
